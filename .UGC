@@ -1,0 +1,76 @@
+function git_checkout_file () {
+ 
+ local filename=$2
+ local commit=$1
+ if [ -z $1 ]
+        then
+        echo "   # commitID/branchname is empty"
+        echo "   # Usage:"
+        echo "   #    - git-file (commitID/branchname) filename"
+        echo "   #    - e.g. git-file Master HelloWorld.c"
+        echo "   # Description:"
+        echo "   #    - This command will look up your file in the repo/submodule, find it and checkout from the "
+        echo "   #      required commit/branch"
+        return
+fi
+if [ -z $2 ]
+        then
+        echo "   # File name is empty"
+        echo "   # Usage:"
+        echo "   #    - git-file (commitID/branchname) FileName"
+        echo "   #    - e.g. git-file Master HelloWorld.c"
+        echo "   # Description:"
+        echo "   #    - This command will look up your file in the repo/submodule, find it and checkout from the "
+        echo "   #      required commit/branch"
+        return
+fi
+if [ $1 -eq -h ]
+        then
+        echo "   # Usage:"
+        echo "   #    - git-file (commitID/branchname) FileName"
+        echo "   #    - e.g. git-file Master HelloWorld.c"
+        echo "   # Description:"
+        echo "   #    - This command will look up your file in the repo/submodule, find it and checkout from the "
+        echo "   #      required commit/branch"
+        return
+fi
+
+ find . -iname ${filename} | xargs git checkout ${commit} -- 
+ 
+ }
+
+function wsl_to_windows () {
+ 
+ local windows_path=$1
+ if [ -z $1 ]
+        then
+        echo "   # No path found"
+        echo "   # Usage:"
+        echo "   #    cdw '[windows path]'"
+        echo "   #    - e.g. cdw 'C:\'"
+        echo "   # Note:"
+        echo "   #    - You need to run pip install wpc before you can use this command"
+        return
+fi
+
+if [ $1 -eq -h ]
+        then
+        echo "   # Usage:"
+        echo "   #    cdw '[windows path]'"
+        echo "   #    - e.g. cdw 'C:\'"
+        echo "   # Note:"
+        echo "   #    - You need to run pip install wpc before you can use this command"
+        return
+fi
+
+ 
+ linux_path=$(echo "$windows_path" | sed 's/\\/\\\\/g' | xargs wpc -u)
+ cd $linux_path
+ 
+ }
+
+export -f git_checkout_file
+alias git-file='git_checkout_file'
+
+export -f wsl_to_windows
+alias cdw='wsl_to_windows'
